@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:theming/app_data_provider.dart';
+import 'package:theming/theme_picker.dart';
+import 'package:provider/provider.dart';
 
-class TestForm extends StatefulWidget {
-  const TestForm({super.key});
+class SamplePage extends StatefulWidget {
+  const SamplePage({super.key});
 
   @override
-  State<TestForm> createState() => _TestFormState();
+  State<SamplePage> createState() => _SamplePageState();
 }
 
-class _TestFormState extends State<TestForm> {
+class _SamplePageState extends State<SamplePage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
   String _maritalStatus = "";
+  bool isDarkMode = false; // set in build
 
   List<DropdownMenuItem<int>> genderList = [];
 
@@ -93,7 +97,7 @@ class _TestFormState extends State<TestForm> {
       onPressed: () {},
       child: const Text("Ok"),
     ));
-    formWidgets.add(dumpTheme(context));
+    //formWidgets.add(dumpTheme(context));
 
     return formWidgets;
   }
@@ -101,10 +105,14 @@ class _TestFormState extends State<TestForm> {
   Widget dumpTheme(BuildContext context) {
     ThemeData data = Theme.of(context);
     List<Widget> gridItems = [];
-    gridItems.add( Text("Primary", style: TextStyle( backgroundColor: data.primaryColor )));
-    gridItems.add( Text("cardColor", style: TextStyle( backgroundColor: data.cardColor )));
-    gridItems.add( Text("canvasColor", style: TextStyle( backgroundColor: data.canvasColor )));
-    
+    gridItems.add(Text("Primary",
+        style: TextStyle(
+          backgroundColor: data.primaryColor,
+        )));
+    gridItems.add(
+        Text("cardColor", style: TextStyle(backgroundColor: data.cardColor)));
+    gridItems.add(Text("canvasColor",
+        style: TextStyle(backgroundColor: data.canvasColor)));
 
     return GridView.count(
       crossAxisCount: 2,
@@ -112,18 +120,54 @@ class _TestFormState extends State<TestForm> {
     );
   }
 
+  void _gotoSettingsPage(BuildContext context) {
+    MaterialPageRoute route =
+        MaterialPageRoute(builder: (BuildContext context) {
+      return const ThemePicker();
+    });
+    Navigator.of(context).push(route);
+  }
+
   @override
   Widget build(BuildContext context) {
+    isDarkMode = context.read<AppDataProvider>().currentMode == ThemeMode.dark;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Form stuff"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _gotoSettingsPage(context);
+                },
+                icon: const Icon(Icons.settings)),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: ListView(
-              children: _buildForm(context),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(isDarkMode
+                        ? "Switch to light Mode"
+                        : "Switch to dark mode"),
+                    Switch(
+                      value: isDarkMode,
+                      onChanged: (_) {
+                        context.read<AppDataProvider>().toggleThemeMode();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: ListView(
+                    children: _buildForm(context),
+                  ),
+                ),
+                Expanded(child: dumpTheme(context)),
+              ],
             ),
           ),
         ));
