@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:theming/app_data_provider.dart';
 
@@ -143,6 +144,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppDataProvider p = Provider.of<AppDataProvider>(context);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       title: 'Theming',
       theme: p.lightTheme, //lightTheme,

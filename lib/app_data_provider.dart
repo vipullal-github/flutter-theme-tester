@@ -14,10 +14,14 @@ class AppDataProvider with ChangeNotifier {
   }
 
   void initInstance() {
-    lightTheme =
-        ThemeData(colorSchemeSeed: const Color.fromARGB(255, 232, 72, 72));
-    darkTheme =
-        ThemeData(colorSchemeSeed: const Color.fromARGB(255, 7, 79, 11));
+    ColorScheme lightScheme = ColorScheme.fromSeed(
+        brightness: Brightness.light,
+        seedColor: const Color.fromARGB(255, 232, 72, 72));
+    ColorScheme darkScheme = ColorScheme.fromSeed(
+        brightness: Brightness.dark,
+        seedColor: const Color.fromARGB(255, 7, 79, 11));
+    lightTheme = ThemeData.from(colorScheme: lightScheme);
+    darkTheme = ThemeData(colorScheme: darkScheme);
   }
 
   void toggleThemeMode() {

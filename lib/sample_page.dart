@@ -18,6 +18,39 @@ class _SamplePageState extends State<SamplePage> {
 
   List<DropdownMenuItem<int>> genderList = [];
 
+  void _closeDrawer(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  Widget _makeDrawerMenu(BuildContext context) {
+    Color? headerColor =
+        Theme.of(context).navigationDrawerTheme.backgroundColor;
+    return Drawer(
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: headerColor),
+            child: const Text('Drawer Header'),
+          ),
+          ListTile(
+            title: const Text('Item 1'),
+            onTap: () {
+              _closeDrawer(context);
+            },
+          ),
+          ListTile(
+            title: const Text('Item 2'),
+            onTap: () {
+              _closeDrawer(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   buildGenderList() {
     genderList.add(const DropdownMenuItem(
       value: 0,
@@ -133,7 +166,7 @@ class _SamplePageState extends State<SamplePage> {
     isDarkMode = context.read<AppDataProvider>().currentMode == ThemeMode.dark;
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Form stuff"),
+          title: const Text("Sample Page"),
           actions: [
             IconButton(
                 onPressed: () {
@@ -142,6 +175,7 @@ class _SamplePageState extends State<SamplePage> {
                 icon: const Icon(Icons.settings)),
           ],
         ),
+        drawer: _makeDrawerMenu(context),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(

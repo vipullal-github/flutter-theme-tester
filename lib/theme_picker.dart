@@ -14,50 +14,74 @@ class _ThemePickerState extends State<ThemePicker> {
   String _palletGenerationMethod = fromSwatchColor;
 
   Widget _buildMethodSelectorPannel(BuildContext context) {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: RadioListTile<String>(
-              title: const Text(fromSwatchColor),
-              value: fromSwatchColor,
-              groupValue: _palletGenerationMethod,
-              onChanged: (value) {
-                setState(() {
-                  _palletGenerationMethod = value.toString();
-                });
-              },
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: RadioListTile<String>(
+            title: const Text(fromSwatchColor),
+            value: fromSwatchColor,
+            groupValue: _palletGenerationMethod,
+            onChanged: (value) {
+              setState(() {
+                _palletGenerationMethod = value.toString();
+              });
+            },
           ),
-          Expanded(
-            child: RadioListTile<String>(
-              title: const Text(fromColorSet),
-              value: fromColorSet,
-              groupValue: _palletGenerationMethod,
-              onChanged: (value) {
-                setState(() {
-                  _palletGenerationMethod = value.toString();
-                });
-              },
-            ),
+        ),
+        Expanded(
+          child: RadioListTile<String>(
+            title: const Text(fromColorSet),
+            value: fromColorSet,
+            groupValue: _palletGenerationMethod,
+            onChanged: (value) {
+              setState(() {
+                _palletGenerationMethod = value.toString();
+              });
+            },
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _colorSetPannel(BuildContext context) {
+    return const Text("Color set pannel");
+  }
+
+  Widget _buildColorBox(Color aColor) {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: Container(
+        decoration: BoxDecoration(color: aColor, shape: BoxShape.circle),
       ),
     );
   }
 
-  Widget _colorsetPannel(BuildContext context) {
-    return const Text("Color set pannel");
-  }
-
   Widget _swatchPannel(BuildContext context) {
-    return const Text("Swatch pannel");
+    return GridView.count(
+      crossAxisCount: 5,
+      children: [
+        _buildColorBox(Colors.red),
+        _buildColorBox(Colors.pink),
+        _buildColorBox(Colors.purple),
+        _buildColorBox(Colors.deepPurple),
+        _buildColorBox(Colors.indigo),
+        _buildColorBox(Colors.blue),
+        _buildColorBox(Colors.lightBlue),
+        _buildColorBox(Colors.cyan),
+        _buildColorBox(Colors.teal),
+        _buildColorBox(Colors.green),
+        _buildColorBox(Colors.lime),
+        _buildColorBox(Colors.lightBlue),
+      ],
+    );
   }
 
   Widget _buildColorSelectorPannel(BuildContext context) =>
       _palletGenerationMethod == fromColorSet
-          ? _colorsetPannel(context)
+          ? _colorSetPannel(context)
           : _swatchPannel(context);
 
   @override
@@ -73,8 +97,8 @@ class _ThemePickerState extends State<ThemePicker> {
                 height: 12,
               ),
               const Text("Select how you want to build the Material Theme"),
-              _buildMethodSelectorPannel(context),
-              _buildColorSelectorPannel(context),
+              Expanded(flex: 1, child: _buildMethodSelectorPannel(context)),
+              Expanded(flex: 4, child: _buildColorSelectorPannel(context)),
             ],
           ),
         ));
